@@ -1,0 +1,4 @@
+*.iml
+*.xml
+PrviLabos/cmake-build-debug/
+PrviLabos/.idea/
