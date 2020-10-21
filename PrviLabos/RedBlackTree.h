@@ -26,17 +26,21 @@ private:
     Node *root;
 
     void fixRuleViolations(Node *node);
-    void leftRotate(Node *node, Node * parent);
-    void rightRotate(Node *node, Node * parent);
+
+    void leftRotate(Node *x);
+
+    void rightRotate(Node *y);
+
+    Node *search(char key);
 
 public:
     RedBlackTree();
 
     void InsertElement(char key);
 
-    std::pair<char *, char *> getChildrenNodesValues(char *key = nullptr);
+    std::pair<char *, char *> getChildrenNodesValues(const char *key = nullptr);
 
-    bool isRedNode(char *key = nullptr);
+    bool isRedNode(const char *key = nullptr);
 
     char *getRootNode();
 
