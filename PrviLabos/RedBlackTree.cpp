@@ -116,35 +116,31 @@ void RedBlackTree::rightRotate(Node *parent) {
     parent->parent = node;
 }
 
-Node *RedBlackTree::search(char target) {
+Node *RedBlackTree::search(char key) {
     Node *walk = root;
     while (walk) {
         char currentKey = walk->key;
-        if (currentKey == target) {
+        if (currentKey == key) {
             return walk;
         }
-        if (target > currentKey)
-            walk = walk->right;
-        else
+        if (key < currentKey)
             walk = walk->left;
+        else
+            walk = walk->right;
     }
 
     return nullptr;
 }
 
-std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) {
-    if (key == nullptr) {
-        key = &(root->key);
-    }
-
-    Node *node = search(*key);
+std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(char *key) {
+    Node *node = key ? search(*key) : root;
     Node *left = node->left;
     Node *right = node->right;
 
     return std::pair<char *, char *>(left ? &(left->key) : nullptr, right ? &(right->key) : nullptr);
 }
 
-bool RedBlackTree::isRedNode(const char *key) {
+bool RedBlackTree::isRedNode(char *key) {
     return search(*key)->color == RED;
 }
 

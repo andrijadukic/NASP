@@ -37,7 +37,7 @@ private:
 
     void rightRotate(Node *parent);
 
-    Node *search(char target);
+    Node *search(char key);
 
     static void preOrderRec(Node *node, std::string &preOrder);
 
@@ -52,9 +52,9 @@ public:
 
     void InsertElement(char key);
 
-    std::pair<char *, char *> getChildrenNodesValues(const char *key = nullptr);
+    std::pair<char *, char *> getChildrenNodesValues(char *key = nullptr);
 
-    bool isRedNode(const char *key = nullptr);
+    bool isRedNode(char *key = nullptr);
 
     char *getRootNode();
 
