@@ -18,7 +18,6 @@ void RedBlackTree::InsertElement(char key) {
             walk = &(*walk)->left;
         else
             walk = &(*walk)->right;
-
     }
     *walk = new Node(key);
     (*walk)->parent = prev;
@@ -75,13 +74,12 @@ void RedBlackTree::leftRotate(Node *parent) {
 
     parent->right = node->left;
 
-    if (parent->right != nullptr) {
+    if (parent->right) {
         parent->right->parent = parent;
     }
 
     node->parent = parent->parent;
-
-    if (parent->parent == nullptr) {
+    if (!parent->parent) {
         root = node;
     } else if (parent == parent->parent->left) {
         parent->parent->left = node;
@@ -98,13 +96,12 @@ void RedBlackTree::rightRotate(Node *parent) {
 
     parent->left = node->right;
 
-    if (parent->left != nullptr) {
+    if (parent->left) {
         parent->left->parent = parent;
     }
 
     node->parent = parent->parent;
-
-    if (parent->parent == nullptr) {
+    if (!parent->parent) {
         root = node;
     } else if (parent == parent->parent->left) {
         parent->parent->left = node;
@@ -145,7 +142,7 @@ bool RedBlackTree::isRedNode(char *key) {
 }
 
 char *RedBlackTree::getRootNode() {
-    return &(root->key);
+    return root ? &(root->key) : nullptr;
 }
 
 std::string RedBlackTree::PreOrderTraversal() {
@@ -177,7 +174,7 @@ void RedBlackTree::postOrderRec(Node *node, std::string &postOrder) {
 }
 
 void RedBlackTree::print() {
-    int h = 5;
+    int h = 6;
     int i;
     for (i = 1; i <= h; i++) {
         printRec(root, i);

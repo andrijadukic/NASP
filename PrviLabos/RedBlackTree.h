@@ -11,8 +11,8 @@ enum Color {
 
 struct Node {
     char key;
-    bool color;
     Node *left, *right, *parent;
+    bool color;
 
     explicit Node(char key) {
         this->key = key;
