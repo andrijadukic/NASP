@@ -10,14 +10,20 @@ enum Color {
 };
 
 struct Node {
-    char *key;
+    char key;
     bool color;
     Node *left, *right, *parent;
 
-    explicit Node(char *data) {
-        this->key = data;
+    explicit Node(char key) {
+        this->key = key;
         left = right = parent = nullptr;
         color = RED;
+    }
+
+    ~Node() {
+        delete parent;
+        delete left;
+        delete right;
     }
 };
 
@@ -27,11 +33,15 @@ private:
 
     void fixRuleViolations(Node *node);
 
-    void leftRotate(Node *x);
+    void leftRotate(Node *parent);
 
-    void rightRotate(Node *y);
+    void rightRotate(Node *parent);
 
-    Node *search(char key);
+    Node *search(char target);
+
+    static std::string preOrderRec(Node *node);
+
+    static std::string postOrderRec(Node *node);
 
 public:
     RedBlackTree();

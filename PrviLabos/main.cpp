@@ -1,6 +1,10 @@
 #include <iostream>
+#include "RedBlackTree.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    RedBlackTree redBlackTree = RedBlackTree();
+    redBlackTree.InsertElement('2');
+    redBlackTree.InsertElement('4');
+    redBlackTree.InsertElement('3');
+    std::cout << redBlackTree.PostOrderTraversal();
 }

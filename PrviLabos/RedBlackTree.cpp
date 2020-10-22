@@ -6,14 +6,17 @@ RedBlackTree::RedBlackTree() {
 
 void RedBlackTree::InsertElement(char key) {
     Node **walk = &root;
+    Node *prev = nullptr;
     while (*walk) {
-        char currentKey = *((*walk)->key);
+        prev = *walk;
+        char currentKey = (*walk)->key;
         if (key > currentKey)
             walk = &(*walk)->right;
         else
             walk = &(*walk)->left;
     }
-    *walk = new Node(&key);
+    *walk = new Node(key);
+    (*walk)->parent = prev;
 
     fixRuleViolations(*walk);
 }
@@ -25,31 +28,33 @@ void RedBlackTree::fixRuleViolations(Node *node) {
 
         if (parent == grandparent->left) {
             Node *uncle = grandparent->right;
-            if (uncle->color == RED) {
+            if (uncle != nullptr && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
                 node = grandparent;
             } else {
                 if (node == parent->right) {
-                    leftRotate(node);
+                    leftRotate(parent);
                     node = parent;
+                    parent = node->parent;
                 }
-                rightRotate(parent);
+                rightRotate(grandparent);
                 parent->color = BLACK;
                 grandparent->color = RED;
             }
         } else {
             Node *uncle = grandparent->left;
-            if (uncle->color == RED) {
+            if (uncle != nullptr && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
                 node = grandparent;
             } else {
                 if (node == parent->left) {
-                    rightRotate(node);
+                    rightRotate(parent);
                     node = parent;
+                    parent = node->parent;
                 }
-                leftRotate(parent);
+                leftRotate(grandparent);
                 parent->color = BLACK;
                 grandparent->color = RED;
             }
@@ -58,74 +63,74 @@ void RedBlackTree::fixRuleViolations(Node *node) {
     root->color = BLACK;
 }
 
-void RedBlackTree::leftRotate(Node *x) {
-    Node *y = x->right;
+void RedBlackTree::leftRotate(Node *parent) {
+    Node *node = parent->right;
 
-    x->right = y->left;
+    parent->right = node->left;
 
-    if (x->right != nullptr) {
-        x->right->parent = x;
+    if (parent->right != nullptr) {
+        parent->right->parent = parent;
     }
 
-    y->parent = x->parent;
+    node->parent = parent->parent;
 
-    if (x->parent == nullptr) {
-        root = y;
-    } else if (x == x->parent->left) {
-        x->parent->left = y;
+    if (parent->parent == nullptr) {
+        root = node;
+    } else if (parent == parent->parent->left) {
+        parent->parent->left = node;
     } else {
-        x->parent->right = y;
+        parent->parent->right = node;
     }
 
-    y->left = x;
-    x->parent = y;
+    node->left = parent;
+    parent->parent = node;
 }
 
-void RedBlackTree::rightRotate(Node *y) {
-    Node *x = y->left;
+void RedBlackTree::rightRotate(Node *parent) {
+    Node *node = parent->left;
 
-    y->left = x->right;
+    parent->left = node->right;
 
-    if (y->left != nullptr) {
-        y->left->parent = x;
+    if (parent->left != nullptr) {
+        parent->left->parent = parent;
     }
 
-    x->parent = y->parent;
+    node->parent = parent->parent;
 
-    if (y->parent == nullptr) {
-        root = x;
-    } else if (y == y->parent->left) {
-        y->parent->left = x;
+    if (parent->parent == nullptr) {
+        root = node;
+    } else if (parent == parent->parent->left) {
+        parent->parent->left = node;
     } else {
-        y->parent->right = x;
+        parent->parent->right = node;
     }
 
-    x->right = y;
-    y->parent = x;
+    node->right = parent;
+    parent->parent = node;
 }
 
-Node *RedBlackTree::search(char key) {
-    Node **walk = &root;
-    while (*walk) {
-        char currentKey = *((*walk)->key);
-        if (currentKey == key) {
-            return *walk;
+Node *RedBlackTree::search(char target) {
+    Node *walk = root;
+    while (walk) {
+        char currentKey = walk->key;
+        if (currentKey == target) {
+            return walk;
         }
-        if (key > currentKey)
-            walk = &(*walk)->right;
+        if (target > currentKey)
+            walk = walk->right;
         else
-            walk = &(*walk)->left;
+            walk = walk->left;
     }
 
     return nullptr;
 }
 
 std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) {
-    if (key == nullptr) return std::pair<char *, char *>(root->left->key, root->right->key);
+    if (key == nullptr) return std::pair<char *, char *>(&(root->left->key), &(root->right->key));
 
     Node *node = search(*key);
 
-    return std::pair<char *, char *>(node->left->key, node->right->key);
+    return std::pair<char *, char *>(&(node->left->key), &(node->right->key));
 }
 
 bool RedBlackTree::isRedNode(const char *key) {
@@ -133,13 +138,41 @@ bool RedBlackTree::isRedNode(const char *key) {
 }
 
 char *RedBlackTree::getRootNode() {
-    return root->key;
+    return &(root->key);
 }
 
 std::string RedBlackTree::PreOrderTraversal() {
+    return preOrderRec(root);
 }
 
 std::string RedBlackTree::PostOrderTraversal() {
-    return std::__cxx11::string();
+    return postOrderRec(root);
+}
+
+std::string RedBlackTree::preOrderRec(Node *node) {
+    if (node == nullptr) {
+        return "";
+    }
+
+    std::string postOrder;
+    postOrder += node->key;
+    std::string left = postOrderRec(node->left);
+    std::string right = postOrderRec(node->right);
+    postOrder += left.empty() ? "" : left + " ";
+    postOrder += right.empty() ? "" : right + " ";
+    return postOrder;
+}
+
+std::string RedBlackTree::postOrderRec(Node *node) {
+    if (node == nullptr) {
+        return "";
+    }
+
+    std::string postOrder;
+    std::string left = postOrderRec(node->left);
+    std::string right = postOrderRec(node->right);
+    postOrder += left.empty() ? "" : left + " ";
+    postOrder += right.empty() ? "" : right + " ";
+    return postOrder + node->key;
 }
 
