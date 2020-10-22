@@ -39,9 +39,11 @@ private:
 
     Node *search(char target);
 
-    static std::string preOrderRec(Node *node);
+    static void preOrderRec(Node *node, std::string &preOrder);
 
-    static std::string postOrderRec(Node *node);
+    static void postOrderRec(Node *node, std::string &postOrder);
+
+    static void printRec(Node *node, int depth);
 
 public:
     RedBlackTree();
@@ -57,6 +59,8 @@ public:
     std::string PreOrderTraversal();
 
     std::string PostOrderTraversal();
+
+    void print();
 };
 
 #endif

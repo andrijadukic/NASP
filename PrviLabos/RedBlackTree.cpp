@@ -10,10 +10,11 @@ void RedBlackTree::InsertElement(char key) {
     while (*walk) {
         prev = *walk;
         char currentKey = (*walk)->key;
-        if (key > currentKey)
-            walk = &(*walk)->right;
-        else
+        if (key < currentKey)
             walk = &(*walk)->left;
+        else
+            walk = &(*walk)->right;
+
     }
     *walk = new Node(key);
     (*walk)->parent = prev;
@@ -31,6 +32,7 @@ void RedBlackTree::fixRuleViolations(Node *node) {
             if (uncle != nullptr && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
+                grandparent->color = RED;
                 node = grandparent;
             } else {
                 if (node == parent->right) {
@@ -47,6 +49,7 @@ void RedBlackTree::fixRuleViolations(Node *node) {
             if (uncle != nullptr && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
+                grandparent->color = RED;
                 node = grandparent;
             } else {
                 if (node == parent->left) {
@@ -142,37 +145,54 @@ char *RedBlackTree::getRootNode() {
 }
 
 std::string RedBlackTree::PreOrderTraversal() {
-    return preOrderRec(root);
+    std::string preOrder;
+    preOrderRec(root, preOrder);
+    return preOrder;
 }
 
 std::string RedBlackTree::PostOrderTraversal() {
-    return postOrderRec(root);
-}
-
-std::string RedBlackTree::preOrderRec(Node *node) {
-    if (node == nullptr) {
-        return "";
-    }
-
     std::string postOrder;
-    postOrder += node->key;
-    std::string left = postOrderRec(node->left);
-    std::string right = postOrderRec(node->right);
-    postOrder += left.empty() ? "" : left + " ";
-    postOrder += right.empty() ? "" : right + " ";
+    postOrderRec(root, postOrder);
     return postOrder;
 }
 
-std::string RedBlackTree::postOrderRec(Node *node) {
+void RedBlackTree::preOrderRec(Node *node, std::string &preOrder) {
     if (node == nullptr) {
-        return "";
+        return;
     }
 
-    std::string postOrder;
-    std::string left = postOrderRec(node->left);
-    std::string right = postOrderRec(node->right);
-    postOrder += left.empty() ? "" : left + " ";
-    postOrder += right.empty() ? "" : right + " ";
-    return postOrder + node->key;
+    preOrder += node->key;
+    preOrderRec(node->left, preOrder);
+    preOrderRec(node->right, preOrder);
+}
+
+void RedBlackTree::postOrderRec(Node *node, std::string &postOrder) {
+    if (node == nullptr) {
+        return;
+    }
+
+    postOrderRec(node->left, postOrder);
+    postOrderRec(node->right, postOrder);
+    postOrder += node->key;
+}
+
+void RedBlackTree::print() {
+    int h = 5;
+    int i;
+    for (i = 1; i <= h; i++) {
+        printRec(root, i);
+        printf("\n");
+    }
+}
+
+void RedBlackTree::printRec(Node *root, int depth) {
+    if (root == nullptr)
+        return;
+    if (depth == 1)
+        printf("%c ", root->key);
+    else if (depth > 1) {
+        printRec(root->left, depth - 1);
+        printRec(root->right, depth - 1);
+    }
 }
 
