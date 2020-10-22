@@ -4,6 +4,10 @@ RedBlackTree::RedBlackTree() {
     root = nullptr;
 }
 
+RedBlackTree::~RedBlackTree() {
+    delete root;
+}
+
 void RedBlackTree::InsertElement(char key) {
     Node **walk = &root;
     Node *prev = nullptr;
@@ -29,7 +33,7 @@ void RedBlackTree::fixRuleViolations(Node *node) {
 
         if (parent == grandparent->left) {
             Node *uncle = grandparent->right;
-            if (uncle != nullptr && uncle->color == RED) {
+            if (uncle && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
                 grandparent->color = RED;
@@ -46,7 +50,7 @@ void RedBlackTree::fixRuleViolations(Node *node) {
             }
         } else {
             Node *uncle = grandparent->left;
-            if (uncle != nullptr && uncle->color == RED) {
+            if (uncle && uncle->color == RED) {
                 parent->color = BLACK;
                 uncle->color = BLACK;
                 grandparent->color = RED;
@@ -129,11 +133,15 @@ Node *RedBlackTree::search(char target) {
 }
 
 std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) {
-    if (key == nullptr) return std::pair<char *, char *>(&(root->left->key), &(root->right->key));
+    if (key == nullptr) {
+        key = &(root->key);
+    }
 
     Node *node = search(*key);
+    Node *left = node->left;
+    Node *right = node->right;
 
-    return std::pair<char *, char *>(&(node->left->key), &(node->right->key));
+    return std::pair<char *, char *>(left ? &(left->key) : nullptr, right ? &(right->key) : nullptr);
 }
 
 bool RedBlackTree::isRedNode(const char *key) {
@@ -157,9 +165,7 @@ std::string RedBlackTree::PostOrderTraversal() {
 }
 
 void RedBlackTree::preOrderRec(Node *node, std::string &preOrder) {
-    if (node == nullptr) {
-        return;
-    }
+    if (!node) return;
 
     preOrder += node->key;
     preOrderRec(node->left, preOrder);
@@ -167,9 +173,7 @@ void RedBlackTree::preOrderRec(Node *node, std::string &preOrder) {
 }
 
 void RedBlackTree::postOrderRec(Node *node, std::string &postOrder) {
-    if (node == nullptr) {
-        return;
-    }
+    if (!node) return;
 
     postOrderRec(node->left, postOrder);
     postOrderRec(node->right, postOrder);

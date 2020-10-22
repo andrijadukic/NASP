@@ -48,6 +48,8 @@ private:
 public:
     RedBlackTree();
 
+    ~RedBlackTree();
+
     void InsertElement(char key);
 
     std::pair<char *, char *> getChildrenNodesValues(const char *key = nullptr);
