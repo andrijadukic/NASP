@@ -8,7 +8,7 @@ RedBlackTree::~RedBlackTree() {
     delete root;
 }
 
-void RedBlackTree::InsertElement(char key) {
+void RedBlackTree::InsertElement(const char key) {
     Node **walk = &root;
     Node *prev = nullptr;
     while (*walk) {
@@ -129,7 +129,7 @@ Node *RedBlackTree::search(char key) {
     return nullptr;
 }
 
-std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(char *key) {
+std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) {
     Node *node = key ? search(*key) : root;
     Node *left = node->left;
     Node *right = node->right;
@@ -137,7 +137,7 @@ std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(char *key) {
     return std::pair<char *, char *>(left ? &(left->key) : nullptr, right ? &(right->key) : nullptr);
 }
 
-bool RedBlackTree::isRedNode(char *key) {
+bool RedBlackTree::isRedNode(const char *key) {
     return search(*key)->color == RED;
 }
 
@@ -172,24 +172,3 @@ void RedBlackTree::postOrderRec(Node *node, std::string &postOrder) {
     postOrderRec(node->right, postOrder);
     postOrder += node->key;
 }
-
-void RedBlackTree::print() {
-    int h = 6;
-    int i;
-    for (i = 1; i <= h; i++) {
-        printRec(root, i);
-        printf("\n");
-    }
-}
-
-void RedBlackTree::printRec(Node *root, int depth) {
-    if (root == nullptr)
-        return;
-    if (depth == 1)
-        printf("%c ", root->key);
-    else if (depth > 1) {
-        printRec(root->left, depth - 1);
-        printRec(root->right, depth - 1);
-    }
-}
-
