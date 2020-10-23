@@ -1,8 +1,6 @@
 #ifndef REDBLACKTREE_H
 #define REDBLACKTREE_H
 
-#include <cstdio>
-#include <utility>
 #include <string>
 
 enum Color {
