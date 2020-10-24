@@ -29,40 +29,33 @@ void RedBlackTree::fixRuleViolations(Node *node) {
     while (node != root && node->parent->color == RED) {
         Node *parent = node->parent;
         Node *grandparent = parent->parent;
-
         if (parent == grandparent->left) {
             Node *uncle = grandparent->right;
             if (uncle && uncle->color == RED) {
-                parent->color = BLACK;
-                uncle->color = BLACK;
+                parent->color = uncle->color = BLACK;
                 grandparent->color = RED;
                 node = grandparent;
             } else {
                 if (node == parent->right) {
                     leftRotate(parent);
-                    node = parent;
-                    parent = node->parent;
+                    std::swap(node, parent);
                 }
                 rightRotate(grandparent);
-                parent->color = BLACK;
-                grandparent->color = RED;
+                std::swap(parent->color, grandparent->color);
             }
         } else {
             Node *uncle = grandparent->left;
             if (uncle && uncle->color == RED) {
-                parent->color = BLACK;
-                uncle->color = BLACK;
+                parent->color = uncle->color = BLACK;
                 grandparent->color = RED;
                 node = grandparent;
             } else {
                 if (node == parent->left) {
                     rightRotate(parent);
-                    node = parent;
-                    parent = node->parent;
+                    std::swap(node, parent);
                 }
                 leftRotate(grandparent);
-                parent->color = BLACK;
-                grandparent->color = RED;
+                std::swap(parent->color, grandparent->color);
             }
         }
     }
@@ -117,9 +110,7 @@ Node *RedBlackTree::search(char key) {
     Node *walk = root;
     while (walk) {
         char currentKey = walk->key;
-        if (currentKey == key) {
-            return walk;
-        }
+        if (currentKey == key) return walk;
         if (key < currentKey)
             walk = walk->left;
         else
