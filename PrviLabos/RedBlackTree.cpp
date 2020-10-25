@@ -1,4 +1,3 @@
-#include <iostream>
 #include "RedBlackTree.h"
 
 RedBlackTree::RedBlackTree() {
@@ -146,18 +145,18 @@ std::string RedBlackTree::PreOrderTraversal() {
     return preOrder;
 }
 
-std::string RedBlackTree::PostOrderTraversal() {
-    std::string postOrder;
-    postOrderRec(root, postOrder);
-    return postOrder;
-}
-
 void RedBlackTree::preOrderRec(Node *node, std::string &preOrder) {
     if (!node) return;
 
     preOrder += node->key;
     preOrderRec(node->left, preOrder);
     preOrderRec(node->right, preOrder);
+}
+
+std::string RedBlackTree::PostOrderTraversal() {
+    std::string postOrder;
+    postOrderRec(root, postOrder);
+    return postOrder;
 }
 
 void RedBlackTree::postOrderRec(Node *node, std::string &postOrder) {
