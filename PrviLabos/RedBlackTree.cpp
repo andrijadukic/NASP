@@ -1,3 +1,4 @@
+#include <iostream>
 #include "RedBlackTree.h"
 
 RedBlackTree::RedBlackTree() {
@@ -71,14 +72,15 @@ void RedBlackTree::leftRotate(Node *parent) {
         parent->right->parent = parent;
     }
 
-    node->parent = parent->parent;
-    if (!parent->parent) {
+    Node *grandparent = parent->parent;
+    if (!grandparent) {
         root = node;
-    } else if (parent == parent->parent->left) {
-        parent->parent->left = node;
+    } else if (parent == grandparent->left) {
+        grandparent->left = node;
     } else {
-        parent->parent->right = node;
+        grandparent->right = node;
     }
+    node->parent = grandparent;
 
     node->left = parent;
     parent->parent = node;
@@ -93,14 +95,15 @@ void RedBlackTree::rightRotate(Node *parent) {
         parent->left->parent = parent;
     }
 
-    node->parent = parent->parent;
-    if (!parent->parent) {
+    Node *grandparent = parent->parent;
+    if (!grandparent) {
         root = node;
-    } else if (parent == parent->parent->left) {
-        parent->parent->left = node;
+    } else if (parent == grandparent->left) {
+        grandparent->left = node;
     } else {
-        parent->parent->right = node;
+        grandparent->right = node;
     }
+    node->parent = grandparent;
 
     node->right = parent;
     parent->parent = node;
@@ -129,7 +132,8 @@ std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) 
 }
 
 bool RedBlackTree::isRedNode(const char *key) {
-    return search(*key)->color == RED;
+    Node *node = search(*key);
+    return node ? node->color == RED : false;
 }
 
 char *RedBlackTree::getRootNode() {
