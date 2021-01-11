@@ -7,7 +7,7 @@ typedef unsigned int uint;
 void trace(const uint N, const uint M, const uint *const cost, std::vector<std::pair<uint, uint>> &solution) {
     uint i = N - 1;
     uint j = M - 1;
-    while (i > 0 && j > 0) {
+    while (i != 0 && j != 0) {
         solution.emplace_back(i, j);
         if (cost[i * M + j - 1] < cost[(i - 1) * M + j]) {
             j--;
