@@ -1,3 +1,12 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
-int solve(vector<vector<double>> & tableau, vector<double> & solution, double& obj);
+int pivot_column(std::vector<double> &tableau) {
+    return std::distance(std::min_element(tableau.begin(), tableau.end()), tableau.begin());
+}
+
+int main() {
+    std::vector<double>vec{1, 2, 3, 4, 5};
+    pivot_column(vec);
+}
