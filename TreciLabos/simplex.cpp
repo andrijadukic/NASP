@@ -20,7 +20,7 @@ int solve(std::vector<std::vector<double>> &tableau, std::vector<double> &soluti
             return 1;
         }
         int p = pivot_row(tableau, q);
-        active[p] = q;
+        active[p - 1] = q;
         pivot_about(tableau, p, q);
     }
 }
@@ -35,8 +35,8 @@ std::vector<int> init_active(std::vector<std::vector<double>> &tableau) {
 }
 
 bool is_optimum_reached(std::vector<std::vector<double>> &tableau) {
-    size_t n = tableau[0].size() - 1;
-    for (int j = 0; j < n; j++) {
+    size_t m = tableau[0].size() - 1;
+    for (int j = 0; j < m; j++) {
         if (tableau[0][j] < 0.) return false;
     }
     return true;
@@ -60,21 +60,21 @@ int pivot_row(std::vector<std::vector<double>> &tableau, int q) {
     for (int i = 1; i < n; i++) {
         candidates[i - 1] = tableau[i][m] / tableau[i][q];
     }
-    return std::distance(candidates.begin(), std::min_element(candidates.begin(), candidates.end()));
+    return std::distance(candidates.begin(), std::min_element(candidates.begin(), candidates.end())) + 1;
 }
 
 void pivot_about(std::vector<std::vector<double>> &tableau, int p, int q) {
-    p = p + 1;
-    size_t m = tableau[0].size() - 1;
-    double pivot = tableau[p][q];
+    double pq = tableau[p][q];
+    size_t m = tableau[0].size();
+    for (int j = 0; j < m; j++) {
+        tableau[p][j] /= pq;
+    }
     for (int i = 0, n = tableau.size(); i < n; i++) {
         if (i == p) continue;
-        for (int j = m; j >= 0; j--) {
-            tableau[i][j] -= tableau[i][q] * tableau[p][j] / pivot;
+        double yig = tableau[i][q];
+        for (int j = 0; j < m; j++) {
+            tableau[i][j] -= yig * tableau[p][j];
         }
-    }
-    for (int j = 0; j <= m; j++) {
-        tableau[p][j] /= pivot;
     }
 }
 
