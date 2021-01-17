@@ -1,12 +1,8 @@
 #include <algorithm>
-#include <vector>
 #include "simplex.h"
 
 int solve(std::vector<std::vector<double>> &tableau, std::vector<double> &solution, double &obj) {
-    for (double &i : tableau[0]) {
-        i = -i;
-    }
-
+    convert_min_to_max(tableau[0]);
     std::vector<int> active = init_active(tableau);
     while (true) {
         if (is_optimum_reached(tableau)) {
@@ -16,20 +12,28 @@ int solve(std::vector<std::vector<double>> &tableau, std::vector<double> &soluti
             return 0;
         }
         int q = pivot_column(tableau);
-        if (!is_viable_solution_possible(tableau, q)) {
+        int p = pivot_row(tableau, q);
+        if (p == -1) {
             return 1;
         }
-        int p = pivot_row(tableau, q);
         active[p - 1] = q;
         pivot_about(tableau, p, q);
     }
 }
 
+void convert_min_to_max(std::vector<double> &obj) {
+    for (double &c : obj) {
+        c = -c;
+    }
+}
+
 std::vector<int> init_active(std::vector<std::vector<double>> &tableau) {
     size_t n = tableau.size() - 1;
+    size_t m = tableau[0].size() - 1;
+    size_t ind = m - n;
     std::vector<int> active(n);
     for (int i = 0; i < n; i++) {
-        active[i] = n + i;
+        active[i] = ind + i;
     }
     return active;
 }
@@ -43,37 +47,45 @@ bool is_optimum_reached(std::vector<std::vector<double>> &tableau) {
 }
 
 int pivot_column(std::vector<std::vector<double>> &tableau) {
-    return std::distance(tableau[0].begin(), std::min_element(tableau[0].begin(), tableau[0].end() - 1));
-}
-
-bool is_viable_solution_possible(std::vector<std::vector<double>> &tableau, int q) {
-    for (std::vector<double> &i : tableau) {
-        if (i[q] > 0.) return true;
-    }
-    return false;
+    std::vector<double> &obj = tableau[0];
+    return std::distance(obj.begin(), std::min_element(obj.begin(), obj.end() - 1));
 }
 
 int pivot_row(std::vector<std::vector<double>> &tableau, int q) {
-    size_t n = tableau.size();
+    int p = -1;
+    double min = std::numeric_limits<double>::infinity();
     size_t m = tableau[0].size() - 1;
-    std::vector<double> candidates(n - 1);
-    for (int i = 1; i < n; i++) {
-        candidates[i - 1] = tableau[i][m] / tableau[i][q];
+    for (int i = 1, n = tableau.size(); i < n; i++) {
+        double yiq = tableau[i][q];
+        if (yiq <= 0.) continue;
+        double curr = tableau[i][m] / yiq;
+        if (curr < min) {
+            min = curr;
+            p = i;
+        }
     }
-    return std::distance(candidates.begin(), std::min_element(candidates.begin(), candidates.end())) + 1;
+    return p;
 }
 
 void pivot_about(std::vector<std::vector<double>> &tableau, int p, int q) {
-    double pq = tableau[p][q];
     size_t m = tableau[0].size();
+    double pq = tableau[p][q];
     for (int j = 0; j < m; j++) {
+        if (j == q) {
+            tableau[p][j] = 1.;
+            continue;
+        }
         tableau[p][j] /= pq;
     }
     for (int i = 0, n = tableau.size(); i < n; i++) {
         if (i == p) continue;
-        double yig = tableau[i][q];
+        double yiq = tableau[i][q];
         for (int j = 0; j < m; j++) {
-            tableau[i][j] -= yig * tableau[p][j];
+            if (j == q) {
+                tableau[i][j] = 0.;
+                continue;
+            }
+            tableau[i][j] -= yiq * tableau[p][j];
         }
     }
 }
