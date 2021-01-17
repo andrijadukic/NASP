@@ -5,13 +5,13 @@ int solve(std::vector<std::vector<double>> &tableau, std::vector<double> &soluti
     convert_min_to_max(tableau[0]);
     std::vector<int> active = init_active(tableau);
     while (true) {
-        if (is_optimum_reached(tableau)) {
+        int q = pivot_column(tableau);
+        if (tableau[0][q] >= 0.) {
             std::pair<std::vector<double>, double> extracted_solution = extract(tableau, active);
             solution = extracted_solution.first;
             obj = extracted_solution.second;
             return 0;
         }
-        int q = pivot_column(tableau);
         int p = pivot_row(tableau, q);
         if (p == -1) {
             return 1;
@@ -36,14 +36,6 @@ std::vector<int> init_active(std::vector<std::vector<double>> &tableau) {
         active[i] = ind + i;
     }
     return active;
-}
-
-bool is_optimum_reached(std::vector<std::vector<double>> &tableau) {
-    size_t m = tableau[0].size() - 1;
-    for (int j = 0; j < m; j++) {
-        if (tableau[0][j] < 0.) return false;
-    }
-    return true;
 }
 
 int pivot_column(std::vector<std::vector<double>> &tableau) {

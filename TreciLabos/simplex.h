@@ -9,8 +9,6 @@ void convert_min_to_max(std::vector<double> &obj);
 
 std::vector<int> init_active(std::vector<std::vector<double>> &tableau);
 
-bool is_optimum_reached(std::vector<std::vector<double>> &tableau);
-
 std::pair<std::vector<double>, double> extract(std::vector<std::vector<double>> &tableau, std::vector<int> &active);
 
 int pivot_column(std::vector<std::vector<double>> &tableau);
