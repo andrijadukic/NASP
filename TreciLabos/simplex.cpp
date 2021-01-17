@@ -29,8 +29,7 @@ void convert_min_to_max(std::vector<double> &obj) {
 
 std::vector<int> init_active(std::vector<std::vector<double>> &tableau) {
     size_t n = tableau.size() - 1;
-    size_t m = tableau[0].size() - 1;
-    size_t ind = m - n;
+    size_t ind = tableau[0].size() - 1 - n;
     std::vector<int> active(n);
     for (int i = 0; i < n; i++) {
         active[i] = ind + i;
