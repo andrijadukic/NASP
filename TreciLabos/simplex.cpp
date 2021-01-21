@@ -6,7 +6,7 @@ int solve(std::vector<std::vector<double>> &tableau, std::vector<double> &soluti
     std::vector<int> active = init_active(tableau);
     while (true) {
         int q = pivot_column(tableau);
-        if (tableau[0][q] >= 0.) {
+        if (q == -1) {
             std::pair<std::vector<double>, double> extracted_solution = extract(tableau, active);
             solution = extracted_solution.first;
             obj = extracted_solution.second;
@@ -38,8 +38,19 @@ std::vector<int> init_active(std::vector<std::vector<double>> &tableau) {
 }
 
 int pivot_column(std::vector<std::vector<double>> &tableau) {
+    int q = -1;
+    double min = 0.;
     std::vector<double> &obj = tableau[0];
-    return std::distance(obj.begin(), std::min_element(obj.begin(), obj.end() - 1));
+    size_t m = obj.size() - 1;
+    for (int j = 0; j < m; j++) {
+        double curr = obj[j];
+        if (curr >= 0.) continue;
+        if (curr < min) {
+            min = curr;
+            q = j;
+        }
+    }
+    return q;
 }
 
 int pivot_row(std::vector<std::vector<double>> &tableau, int q) {
