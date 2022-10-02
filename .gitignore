@@ -5,6 +5,7 @@ FirstTask/.idea/
 *.cbp
 *.exe
 *.txt
+.idea
 MinCostPath/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake
 MinCostPath/cmake-build-debug/
 SecondTask/cmake-build-debug/
