@@ -1,11 +1,11 @@
 *.iml
 *.xml
-PrviLabos/cmake-build-debug/
-PrviLabos/.idea/
+FirstTask/cmake-build-debug/
+FirstTask/.idea/
 *.cbp
 *.exe
 *.txt
 MinCostPath/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake
 MinCostPath/cmake-build-debug/
-DrugiLabos/cmake-build-debug/
-TreciLabos/cmake-build-debug/
+SecondTask/cmake-build-debug/
+ThirdTask/cmake-build-debug/

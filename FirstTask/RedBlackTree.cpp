@@ -132,7 +132,7 @@ std::pair<char *, char *> RedBlackTree::getChildrenNodesValues(const char *key) 
 
 bool RedBlackTree::isRedNode(const char *key) {
     Node *node = search(*key);
-    return node ? node->color == RED : false;
+    return node != nullptr && node->color == RED;
 }
 
 char *RedBlackTree::getRootNode() {
